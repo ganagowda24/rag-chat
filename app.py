@@ -10,14 +10,18 @@ from rag.agent import Agent, transcribe_audio
 from rag.ingest import load_bytes
 from rag.store import VectorStore
 
-# Automatically use offline cache if model exists locally, otherwise allow online download
-hub_cache = Path.home() / ".cache" / "huggingface" / "hub"
-if hub_cache.exists() and any(hub_cache.glob("*all-MiniLM-L6-v2*")):
-    os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-else:
-    os.environ.pop("HF_HUB_OFFLINE", None)
-    os.environ.pop("TRANSFORMERS_OFFLINE", None)
+# Force offline flags off so models can download on cloud servers like Streamlit Cloud
+for _var in ["HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"]:
+    if _var in os.environ:
+        del os.environ[_var]
+    os.environ[_var] = "0"
+
+try:
+    import huggingface_hub.constants
+
+    huggingface_hub.constants.HF_HUB_OFFLINE = False
+except Exception:
+    pass
 
 # Prioritize IPv4 over stalled IPv6 network routes
 _orig_gai = socket.getaddrinfo

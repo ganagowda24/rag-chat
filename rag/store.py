@@ -133,17 +133,20 @@ def rerank_passages(query: str, candidates: list[dict], top_k: int = 4) -> list[
 class VectorStore:
     def __init__(self, path: str = "chroma_db", collection: str = "docs"):
         client = chromadb.PersistentClient(path=path)
+        for _v in ["HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"]:
+            if _v in os.environ:
+                del os.environ[_v]
+            os.environ[_v] = "0"
         try:
-            ef: Any = embedding_functions.SentenceTransformerEmbeddingFunction(
-                model_name="all-MiniLM-L6-v2"
-            )
+            import huggingface_hub.constants
+
+            huggingface_hub.constants.HF_HUB_OFFLINE = False
         except Exception:
-            # If offline flag was set or files not yet downloaded on cloud container, unset and download
-            os.environ.pop("HF_HUB_OFFLINE", None)
-            os.environ.pop("TRANSFORMERS_OFFLINE", None)
-            ef = embedding_functions.SentenceTransformerEmbeddingFunction(
-                model_name="all-MiniLM-L6-v2"
-            )
+            pass
+
+        ef: Any = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name="all-MiniLM-L6-v2"
+        )
         self.col = client.get_or_create_collection(
             collection, embedding_function=ef, metadata={"hnsw:space": "cosine"}
         )
