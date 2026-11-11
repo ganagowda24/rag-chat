@@ -1,6 +1,7 @@
 """Chroma vector store with local embeddings, BM25 Hybrid Search (RRF), and Re-ranking."""
 import hashlib
 import math
+import os
 import re
 from collections import Counter
 from collections.abc import Sequence
@@ -132,9 +133,17 @@ def rerank_passages(query: str, candidates: list[dict], top_k: int = 4) -> list[
 class VectorStore:
     def __init__(self, path: str = "chroma_db", collection: str = "docs"):
         client = chromadb.PersistentClient(path=path)
-        ef: Any = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name="all-MiniLM-L6-v2"
-        )
+        try:
+            ef: Any = embedding_functions.SentenceTransformerEmbeddingFunction(
+                model_name="all-MiniLM-L6-v2"
+            )
+        except Exception:
+            # If offline flag was set or files not yet downloaded on cloud container, unset and download
+            os.environ.pop("HF_HUB_OFFLINE", None)
+            os.environ.pop("TRANSFORMERS_OFFLINE", None)
+            ef = embedding_functions.SentenceTransformerEmbeddingFunction(
+                model_name="all-MiniLM-L6-v2"
+            )
         self.col = client.get_or_create_collection(
             collection, embedding_function=ef, metadata={"hnsw:space": "cosine"}
         )

@@ -10,9 +10,14 @@ from rag.agent import Agent, transcribe_audio
 from rag.ingest import load_bytes
 from rag.store import VectorStore
 
-# Force fast local cached embeddings without network hang on Hugging Face Hub
-os.environ["HF_HUB_OFFLINE"] = "1"
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
+# Automatically use offline cache if model exists locally, otherwise allow online download
+hub_cache = Path.home() / ".cache" / "huggingface" / "hub"
+if hub_cache.exists() and any(hub_cache.glob("*all-MiniLM-L6-v2*")):
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+else:
+    os.environ.pop("HF_HUB_OFFLINE", None)
+    os.environ.pop("TRANSFORMERS_OFFLINE", None)
 
 # Prioritize IPv4 over stalled IPv6 network routes
 _orig_gai = socket.getaddrinfo
