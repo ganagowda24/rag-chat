@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "n": 8,
+    "tool_accuracy": 1.0,
+    "retrieval_hit_rate": 1.0,
+    "keyword_score": 1.0,
+    "faithfulness_avg_of_5": 5.0
+  },
+  "rows": [
+    {
+      "question": "How many vacation days do employees get per year?",
+      "answer": "Full-time employees receive 24 days of paid vacation per year [1].",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "retrieval": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Directly grounded in Acme Handbook."
+    },
+    {
+      "question": "How many unused vacation days can I carry over?",
+      "answer": "You can carry over up to a maximum of 5 unused vacation days into the next year [1].",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "retrieval": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Accurately cited from leave policy."
+    },
+    {
+      "question": "How many days a week can I work from home, and which days are core office days?",
+      "answer": "Employees may work remotely up to 3 days per week. Core in-office days are Tuesday and Wednesday [1].",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "retrieval": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Exact match with handbook remote work section."
+    },
+    {
+      "question": "What's the daily meal reimbursement limit when travelling?",
+      "answer": "Meals during business travel are reimbursed up to $60 per day [1].",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "retrieval": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Verifiable from expenses policy."
+    },
+    {
+      "question": "What is the minimum password length?",
+      "answer": "Passwords must be at least 14 characters in length [1].",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "retrieval": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Direct citation from security section."
+    },
+    {
+      "question": "What is the CEO's salary at Acme?",
+      "answer": "I could not find the CEO's salary in the uploaded company documents.",
+      "tools": ["search_documents"],
+      "tool_ok": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Correctly admits information is missing without hallucinating."
+    },
+    {
+      "question": "What's the weather in Bengaluru right now?",
+      "answer": "The current weather in Bengaluru is 26°C with 60% humidity.",
+      "tools": ["get_weather"],
+      "tool_ok": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Grounded in live Open-Meteo weather response."
+    },
+    {
+      "question": "Who won the most recent FIFA World Cup?",
+      "answer": "Argentina won the 2022 FIFA World Cup.",
+      "tools": ["web_search"],
+      "tool_ok": true,
+      "keywords": 1.0,
+      "faithful": 5,
+      "judge_reason": "Factual and supported by web search."
+    }
+  ]
+}

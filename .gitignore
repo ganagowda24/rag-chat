@@ -1,0 +1,34 @@
+# Environment variables & secrets (CRITICAL: Never commit API keys!)
+.env
+*.env
+
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Vector store databases & local persistent data
+chroma_db/
+chroma_eval_db/
+data/sample_docs/
+
+# IDE / Editor configuration
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Linters and testing caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
